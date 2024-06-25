@@ -1,0 +1,30 @@
+[project]
+name = "snmp-diode"
+version = "0.0.1"
+authors = [
+  { name="Renato Almeida de Oliveira", email="renato.almeida.oliveira@gmail.com" },
+]
+description = "A SNMP Interface to NetBoxLabs Diode"
+readme = "README.md"
+requires-python = ">=3.10"
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.scripts]
+snmp-diode = "snmp_diode.entrypoint:main"
+
+[project.urls]
+Homepage = "https://github.com/renatoalmeidaoliveira/snmp-diode/"
+Issues = "https://github.com/renatoalmeidaoliveira/snmp-diode/issues"
+
+
+[build-system]
+requires = [
+    "setuptools>=42",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
