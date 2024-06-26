@@ -7,6 +7,10 @@ parser.add_argument('-a', '--addres', type=str, help='Target IP Address', requir
 parser.add_argument('-n', '--network', type=str, help='Target Network Address', required=False)
 parser.add_argument('-c', '--community', type=str, help='SNMP Community String', required=True)
 parser.add_argument('-v', '--version', type=str, help='SNMP Version', required=True)
+# parser.add_argument('-d', '--diode', type=str, help='Diode Server', required=True)
+parser.add_argument('--apply', default=False, type=bool, help='Apply data to Diode Server')
+
+
 
 
 def main():

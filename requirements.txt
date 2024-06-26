@@ -1,0 +1,19 @@
+annotated-types==0.7.0
+build==1.2.1
+certifi==2024.2.2
+easysnmp==0.2.6
+googleapis-common-protos==1.63.2
+grpcio==1.62.1
+grpcio-status==1.62.1
+netaddr==1.3.0
+netboxlabs-diode-sdk==0.1.0
+packaging==24.1
+protobuf==5.27.1
+pydantic==2.7.4
+pydantic_core==2.18.4
+pyproject_hooks==1.1.0
+sentry-sdk==2.6.0
+-e git+ssh://git@github.com/renatoalmeidaoliveira/snmp-diode.git@84dd2a9335d04c4f0f027031088efa4e526045c4#egg=snmp_diode
+tomli==2.0.1
+typing_extensions==4.12.2
+urllib3==2.2.2
