@@ -12,7 +12,7 @@ class Interface(BaseModel):
     name: str
     mac_address: str
     address: Optional[str] = None
-    enabled: Optional[bool] = None
+    enabled: bool
 
 
 class Device(BaseModel):

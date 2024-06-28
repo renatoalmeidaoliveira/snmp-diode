@@ -36,7 +36,7 @@ def main():
         "version": version,
         "community": args.community,
     }
-    if not args.snmp_only and (args.diode is None):
+    if args.apply and (args.diode is None):
         print("Please provide a Diode server and API key")
         exit(1)
 
