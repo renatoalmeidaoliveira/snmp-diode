@@ -14,6 +14,13 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+dependencies = [
+  "netboxlabs-diode-sdk",
+  "pydantic",
+  "easysnmp",
+  "netaddr"
+]
+
 [project.scripts]
 snmp-diode = "snmp_diode.entrypoint:main"
 

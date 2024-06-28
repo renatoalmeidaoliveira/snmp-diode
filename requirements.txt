@@ -13,7 +13,6 @@ pydantic==2.7.4
 pydantic_core==2.18.4
 pyproject_hooks==1.1.0
 sentry-sdk==2.6.0
--e git+ssh://git@github.com/renatoalmeidaoliveira/snmp-diode.git@84dd2a9335d04c4f0f027031088efa4e526045c4#egg=snmp_diode
 tomli==2.0.1
 typing_extensions==4.12.2
 urllib3==2.2.2
