@@ -1,5 +1,6 @@
 import argparse
 from snmp_diode import discover
+from netboxlabs.diode.sdk import DiodeClient
 
 parser = argparse.ArgumentParser(description='SNMP Discovery Tool for NetBoxLabs Diode') 
 
@@ -7,7 +8,8 @@ parser.add_argument('-a', '--addres', type=str, help='Target IP Address', requir
 parser.add_argument('-n', '--network', type=str, help='Target Network Address', required=False)
 parser.add_argument('-c', '--community', type=str, help='SNMP Community String', required=True)
 parser.add_argument('-v', '--version', type=str, help='SNMP Version', required=True)
-# parser.add_argument('-d', '--diode', type=str, help='Diode Server', required=True)
+parser.add_argument('-d', '--diode', type=str, help='Diode Server', required=True)
+parser.add_argument('-k', '--api_key', type=str, help='Diode API Key', required=False)
 parser.add_argument('--apply', default=False, type=bool, help='Apply data to Diode Server')
 
 
@@ -34,7 +36,14 @@ def main():
     }
     if args.addres:
         device_data = discover.gater_device_data(args.addres, snmp_data)
-        print(device_data.model_dump())
+        with DiodeClient(
+            target=args.diode, app_name="snmp-diode", app_version="0.0.1", api_key=args.api_key
+        ) as client:
+            response = client.ingest(entities=device_data.model_dump())
+            if response.errors:
+                print(f"FAIL: response errors: {response.errors}")
+            else:
+                print("INFO: data ingested successfully")
 
         
     
