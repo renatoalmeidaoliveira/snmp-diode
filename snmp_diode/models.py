@@ -53,6 +53,8 @@ class Device(BaseModel):
                         address=interface.address,
                         interface=interface.name,
                         device=self.name,
+                        site=self.site,
+
                     )
                 )
                 entity_list.append(ip_entity)
