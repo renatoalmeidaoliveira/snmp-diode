@@ -87,11 +87,10 @@ def process_interfaces(session):
 
     for address in addresses:
         if addresses[address]["if_oid"] in interfaces:
-            interfaces[addresses[address]["if_oid"]]["address"] = str(
-                netaddr.IPNetwork(
+            ipnet = netaddr.IPNetwork(
                     f'{addresses[address]["address"]}/{addresses[address]["netmask"]}'
-                ).cidr
-            )
+                )
+            interfaces[addresses[address]["if_oid"]]["address"] = f"{ipnet.ip}/{ipnet.prefixlen}"
 
     output = []
     for interface in interfaces:
