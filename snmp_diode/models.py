@@ -7,10 +7,12 @@ from netboxlabs.diode.sdk.ingester import (
     IPAddress,
 )
 
+
 class Interface(BaseModel):
     name: str
     mac_address: str
     address: Optional[str] = None
+    enabled: Optional[bool] = None
 
 
 class Device(BaseModel):
@@ -41,6 +43,7 @@ class Device(BaseModel):
                     mac_address=interface.mac_address,
                     device=self.name,
                     site=self.site,
+                    enabled=interface.enabled,
                 )
             )
             entity_list.append(iface_entity)
@@ -54,7 +57,3 @@ class Device(BaseModel):
                 )
                 entity_list.append(ip_entity)
         return entity_list
-        
-        
-
-
