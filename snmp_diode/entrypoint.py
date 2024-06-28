@@ -11,8 +11,8 @@ parser.add_argument("-c", "--community", type=str, help="SNMP Community String",
 parser.add_argument("-v", "--version", type=str, help="SNMP Version", required=True)
 parser.add_argument("-d", "--diode", type=str, help="Diode Server", required=False)
 parser.add_argument("-k", "--api_key", type=str, help="Diode API Key", required=False)
-parser.add_argument( "--apply", default=False, type=bool, help="Apply the changes to NetBox", required=False,)
-
+parser.add_argument( "--apply", action="store_false", type=bool, help="Apply the changes to NetBox", required=False,)
+ 
 
 def main():
     args = parser.parse_args()
