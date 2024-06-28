@@ -30,7 +30,7 @@ def gater_device_data(address, snmp_data):
         "name": device_name_oid.value.replace('"', ""),
         "manufacturer": manufacturer,
         "device_type": device_type,
-        "site": location_oid.value,
+        "site": location_oid.value.replace('"', ""),
         "interfaces": interfaces,
     }
     return models.Device(**device_data)
