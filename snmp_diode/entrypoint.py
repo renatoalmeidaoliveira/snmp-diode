@@ -59,6 +59,7 @@ def main():
                 print("Please provide a username, auth password, and auth protocol")
                 exit(1)
             snmp_data["version_data"] = {
+                "level": "authNoPriv",  # "authNoPriv", "authPriv", "noAuthNoPriv
                 "username": args.username,
                 "auth": args.auth,
                 "auth_protocol": args.auth_protocol,
@@ -76,6 +77,7 @@ def main():
                 )
                 exit(1)
             snmp_data["version_data"] = {
+                "level": "authPriv",  # "authNoPriv", "authPriv", "noAuthNoPriv
                 "username": args.username,
                 "auth": args.auth,
                 "auth_protocol": args.auth_protocol,
@@ -86,7 +88,10 @@ def main():
             if args.username is None:
                 print("Please provide a username")
                 exit(1)
-            snmp_data["version_data"] = {"username": args.username}
+            snmp_data["version_data"] = {
+                "level": "noAuthNoPriv",  # "authNoPriv", "authPriv", "noAuthNoPriv
+                "username": args.username
+                }
 
     if args.apply and (args.diode is None):
         print("Please provide a Diode server and API key")
