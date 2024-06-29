@@ -18,7 +18,6 @@ parser.add_argument("-A", "--auth_protocol", type=str, help="SNMPv3 Auth Protoco
 parser.add_argument("-x", "--privacy", type=str, help="SNMPv3 Privacy Password", required=False)
 parser.add_argument("-X", "--privacy_protocol", type=str, help="SNMPv3 Privacy Protocol", required=False)
 parser.add_argument("-l", "--level", type=str, help="SNMPv3 Security Level", required=False, choices=snmpv3_levels)
-
 parser.add_argument("-d", "--diode", type=str, help="Diode Server", required=False)
 parser.add_argument("-k", "--api_key", type=str, help="Diode API Key", required=False)
 parser.add_argument( "--apply", action="store_true", default=False, help="Apply the changes to NetBox", required=False,)
@@ -27,10 +26,10 @@ parser.add_argument( "--apply", action="store_true", default=False, help="Apply 
 def main():
     args = parser.parse_args()
     versions = ["2", "v2c", "3"]
-    if args.address is None and args.network is None:
+    if args.host is None and args.network is None:
         print("Please provide either a target IP address or a target network address")
         exit(1)
-    if args.address is not None and args.network is not None:
+    if args.host is not None and args.network is not None:
         print(
             "Please provide either a target IP address or a target network address, not both"
         )
@@ -95,12 +94,12 @@ def main():
 
     entities = []
     discover_errors = {}
-    if args.address:
+    if args.host:
         try:
-            device_data = discover.gater_device_data(args.address, snmp_data)
+            device_data = discover.gater_device_data(args.host, snmp_data)
             entities = entities + device_data.model_dump()
         except Exception as e:
-            discover_errors[args.address] = str(e)
+            discover_errors[args.host] = str(e)
 
     if args.network:
         network = netaddr.IPNetwork(args.network)
