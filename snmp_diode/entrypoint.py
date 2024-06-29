@@ -8,7 +8,7 @@ parser = argparse.ArgumentParser(description="SNMP Discovery Tool for NetBoxLabs
 snmpv3_levels = ["noAuthNoPriv", "authNoPriv", "authPriv"]
 snmpv3_auth_protocols = ["MD5", "SHA"] 
 
-parser.add_argument("-h", "--host", type=str, help="Target Host Address", required=False)
+parser.add_argument("-t", "--host", type=str, help="Target Host Address", required=False)
 parser.add_argument("-n", "--network", type=str, help="Target Network Address", required=False)
 parser.add_argument("-v", "--version", type=str, help="SNMP Version", required=True)
 parser.add_argument("-c", "--community", type=str, help="SNMP Community String", required=False)
