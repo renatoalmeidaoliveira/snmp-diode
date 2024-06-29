@@ -92,12 +92,20 @@ def process_interfaces(session):
                 )
             interfaces[addresses[address]["if_oid"]]["address"] = f"{ipnet.ip}/{ipnet.prefixlen}"
 
+    description_items = session.walk("iso.3.6.1.2.1.31.1.18")
+
+    for item in description_items:
+        interface_id = item.oid.replace("iso.3.6.1.2.1.31.1.18.", "")
+        if interface_id in interfaces:
+            interfaces[interface_id]["description"] = item.value.replace('"', "")
+
     output = []
     for interface in interfaces:
         iface_data = {
             "name": interfaces[interface]["name"].replace('"', ""),
             "mac_address": interfaces[interface]["mac"],
             "enabled": interfaces[interface]["enabled"],
+            "description": interfaces[interface]["description"]
         }
         if "address" in interfaces[interface]:
             iface_data["address"] = interfaces[interface]["address"]

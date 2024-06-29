@@ -12,6 +12,7 @@ class Interface(BaseModel):
     name: str
     mac_address: str
     address: Optional[str] = None
+    description: Optional[str] = None
     enabled: bool
 
 
@@ -41,6 +42,7 @@ class Device(BaseModel):
                 interface=DiodeInterface(
                     name=interface.name,
                     mac_address=interface.mac_address,
+                    description=interface.description,
                     device=self.name,
                     site=self.site,
                     enabled=interface.enabled,
