@@ -5,10 +5,20 @@ from netboxlabs.diode.sdk import DiodeClient
 
 parser = argparse.ArgumentParser(description="SNMP Discovery Tool for NetBoxLabs Diode")
 
+snmpv3_levels = ["noAuthNoPriv", "authNoPriv", "authPriv"]
+snmpv3_auth_protocols = ["MD5", "SHA"] 
+
 parser.add_argument("-a", "--address", type=str, help="Target IP Address", required=False)
 parser.add_argument("-n", "--network", type=str, help="Target Network Address", required=False)
-parser.add_argument("-c", "--community", type=str, help="SNMP Community String", required=True)
 parser.add_argument("-v", "--version", type=str, help="SNMP Version", required=True)
+parser.add_argument("-c", "--community", type=str, help="SNMP Community String", required=False)
+parser.add_argument("-u", "--username", type=str, help="SNMPv3 Username", required=False)
+parser.add_argument("-a", "--auth", type=str, help="SNMPv3 Auth Password", required=False)
+parser.add_argument("-A", "--auth_protocol", type=str, help="SNMPv3 Auth Protocol", required=False, choices=snmpv3_auth_protocols)
+parser.add_argument("-x", "--privacy", type=str, help="SNMPv3 Privacy Password", required=False)
+parser.add_argument("-X", "--privacy_protocol", type=str, help="SNMPv3 Privacy Protocol", required=False)
+parser.add_argument("-l", "--level", type=str, help="SNMPv3 Security Level", required=False, choices=snmpv3_levels)
+
 parser.add_argument("-d", "--diode", type=str, help="Diode Server", required=False)
 parser.add_argument("-k", "--api_key", type=str, help="Diode API Key", required=False)
 parser.add_argument( "--apply", action="store_true", default=False, help="Apply the changes to NetBox", required=False,)
@@ -30,12 +40,55 @@ def main():
         exit(1)
     elif args.version == "2" or args.version == "v2c":
         version = 2
+        if args.community is None:
+            print("Please provide an SNMP community string")
+            exit(1)
     elif args.version == "3":
         version = 3
+
     snmp_data = {
         "version": version,
-        "community": args.community,
     }
+    if version == 2:
+        snmp_data["version_data"] = {"community": args.community}
+    elif version == 3:
+        if args.level is None:
+            print("Please provide an SNMPv3 security level")
+            exit(1)
+        if args.level == "authNoPriv":
+            if args.username is None or args.auth is None or args.auth_protocol is None:
+                print("Please provide a username, auth password, and auth protocol")
+                exit(1)
+            snmp_data["version_data"] = {
+                "username": args.username,
+                "auth": args.auth,
+                "auth_protocol": args.auth_protocol,
+            }
+        elif args.level == "authPriv":
+            if (
+                args.username is None
+                or args.auth is None
+                or args.auth_protocol is None
+                or args.privacy is None
+                or args.privacy_protocol is None
+            ):
+                print(
+                    "Please provide a username, auth password, auth protocol, privacy password, and privacy protocol"
+                )
+                exit(1)
+            snmp_data["version_data"] = {
+                "username": args.username,
+                "auth": args.auth,
+                "auth_protocol": args.auth_protocol,
+                "privacy": args.privacy,
+                "privacy_protocol": args.privacy_protocol,
+            }
+        elif args.level == "noAuthNoPriv":
+            if args.username is None:
+                print("Please provide a username")
+                exit(1)
+            snmp_data["version_data"] = {"username": args.username}
+
     if args.apply and (args.diode is None):
         print("Please provide a Diode server and API key")
         exit(1)

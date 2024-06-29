@@ -5,17 +5,26 @@ from snmp_diode.sysobjectid import manufacturers
 
 
 def gater_device_data(address, snmp_data):
+    session_data = {
+        "hostname": address,
+        "use_sprint_value": True,
+    }
     if snmp_data["version"] == 2:
-        session = Session(
-            hostname=address,
-            community=snmp_data["community"],
-            version=2,
-            use_sprint_value=True,
-        )
+        session_data["community"] = snmp_data["version_data"]["community"]
     elif snmp_data["version"] == 3:
-        raise Exception("SNMP v3 not implemented")
-    else:
-        raise Exception("Invalid version")
+        session_data["security_level"] = snmp_data["version_data"]["level"]
+        session_data["security_username"] = snmp_data["version_data"]["username"]
+        if snmp_data["version_data"]["level"] == "authNoPriv":
+            session_data["auth_protocol"] = snmp_data["version_data"]["auth_protocol"]
+            session_data["auth_password"] = snmp_data["version_data"]["auth"]
+        elif snmp_data["version_data"]["level"] == "authPriv":
+            session_data["auth_protocol"] = snmp_data["version_data"]["auth_protocol"]
+            session_data["auth_password"] = snmp_data["version_data"]["auth"]
+            session_data["privacy_protocol"] = snmp_data["version_data"]["privacy_protocol"]
+            session_data["privacy_password"] = snmp_data["version_data"]["privacy"]
+        
+    
+    session = Session(**session_data)    
 
     device_name_oid = session.get("iso.3.6.1.2.1.1.5.0")
     sysid_oid = session.get("iso.3.6.1.2.1.1.2.0")
