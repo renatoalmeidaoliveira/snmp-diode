@@ -12,7 +12,7 @@ class Interface(BaseModel):
     name: str
     mac_address: str
     address: Optional[str] = None
-    description: Optional[str] = None
+    description: Optional[str] = ""
     enabled: bool
 
 

@@ -119,6 +119,9 @@ def process_interfaces(session):
         }
         if "description" in interfaces[interface]:
             iface_data["description"] = interfaces[interface]["description"]
+        else:
+            iface_data["description"] = ""
+
         if "address" in interfaces[interface]:
             iface_data["address"] = interfaces[interface]["address"]
 
