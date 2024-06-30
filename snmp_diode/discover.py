@@ -8,6 +8,7 @@ def gater_device_data(address, snmp_data):
     session_data = {
         "hostname": address,
         "use_sprint_value": True,
+        "version": snmp_data["version"],
     }
     if snmp_data["version"] == 2:
         session_data["community"] = snmp_data["version_data"]["community"]
