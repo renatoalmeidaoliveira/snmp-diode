@@ -24,6 +24,7 @@ parser.add_argument("-d", "--diode", type=str, help="Diode Server", required=Fal
 parser.add_argument("-k", "--api_key", type=str, help="Diode API Key", required=False)
 parser.add_argument( "--apply", action="store_true", default=False, help="Apply the changes to NetBox", required=False,)
 parser.add_argument("-r", "--role" , type=str, help="Role of the device", required=False)
+parser.add_argument("-s", "--site", type=str, help="Site of the device", required=False)
  
 
 def main():
@@ -111,7 +112,7 @@ def main():
     discover_errors = {}
     if args.host:
         try:
-            device_data = discover.gater_device_data(args.host, args.role, snmp_data)
+            device_data = discover.gater_device_data(args.host, snmp_data, args.role, args.site)
             entities = entities + device_data.model_dump()
         except Exception as e:
             discover_errors[args.host] = str(e)
