@@ -121,7 +121,7 @@ def main():
         network = netaddr.IPNetwork(args.network)
         for address in network:
             try:
-                device_data = discover.gater_device_data(str(address), snmp_data)
+                device_data = discover.gater_device_data(str(address), snmp_data, args.role, args.site)
                 entities = entities + device_data.model_dump()
             except Exception as e:
                 discover_errors[address] = str(e)
