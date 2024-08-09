@@ -27,9 +27,14 @@ To install snmp-diode, follow these steps:
 ## Usage
 
 
-```shell
-usage: snmp-diode [-h] [-t HOST] [-n NETWORK] -v VERSION [-c COMMUNITY] [-u USERNAME] [-a AUTH] [-A {MD5,SHA}] [-x PRIVACY]
-                  [-X PRIVACY_PROTOCOL] [-l {noAuthNoPriv,authNoPriv,authPriv}] [-d DIODE] [-k API_KEY] [--apply]
+```
+usage: snmp-diode [-h] [-t HOST] [-n NETWORK] -v VERSION
+                  [-c COMMUNITY] [-u USERNAME] [-a AUTH]
+                  [-A {MD5,SHA}] [-x PRIVACY]
+                  [-X PRIVACY_PROTOCOL]
+                  [-l {noAuthNoPriv,authNoPriv,authPriv}]
+                  [-d DIODE] [-k API_KEY] [--apply] [-r ROLE]
+                  [-s SITE]
 
 SNMP Discovery Tool for NetBoxLabs Diode
 
@@ -58,7 +63,8 @@ options:
   -k API_KEY, --api_key API_KEY
                         Diode API Key
   --apply               Apply the changes to NetBox
-
+  -r ROLE, --role ROLE  Role of the device
+  -s SITE, --site SITE  Site of the device
 ```
 
 ### Host mode
@@ -85,6 +91,10 @@ Running snmp-diode without the --apply flag it gonna discover the target devices
 ```shell
 $ snmp-diode -n 172.20.20.0/24 -v 2 -c public
 ```
+
+### Role and Site flags
+
+By setting the Role or Site flags, snmp-diode setups those values to all discovered devices.
 
 ## Contributing
 
