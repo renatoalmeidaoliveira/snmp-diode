@@ -1,4 +1,4 @@
-cisco_prodcts = {
+cisco_products = {
     1: "ciscoGatewayServer",
     2: "ciscoTerminalServer",
     3: "ciscoTrouter",
@@ -2834,7 +2834,7 @@ manufacturers = {
     6: {"name": "TWG", "products": {}},
     7: {"name": "CAYMAN", "products": {}},
     8: {"name": "PSI", "products": {}},
-    9: {"name": "Cisco", "products": cisco_prodcts},
+    9: {"name": "Cisco", "products": cisco_products},
     10: {"name": "NSC", "products": {}},
     11: {"name": "Hewlett-Packard", "products": {}},
     12: {"name": "Epilogue", "products": {}},

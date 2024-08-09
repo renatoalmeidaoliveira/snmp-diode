@@ -4,7 +4,7 @@ from snmp_diode import models
 from snmp_diode.sysobjectid import manufacturers
 
 
-def gater_device_data(address, snmp_data):
+def gater_device_data(address, role, snmp_data):
     session_data = {
         "hostname": address,
         "use_sprint_value": True,
@@ -43,6 +43,8 @@ def gater_device_data(address, snmp_data):
         "site": location_oid.value.replace('"', ""),
         "interfaces": interfaces,
     }
+    if role:
+        device_data["role"] = role
     return models.Device(**device_data)
 
 

@@ -23,6 +23,7 @@ class Device(BaseModel):
     platform: Optional[str] = None
     site: str
     interfaces: list[Interface]
+    role: Optional[str] = None
 
     @model_serializer()
     def diode_serializaton(self) -> list:
@@ -34,6 +35,7 @@ class Device(BaseModel):
                 manufacturer=self.manufacturer,
                 platform=self.platform,
                 site=self.site,
+                role=self.role,
             )
         )
         entity_list.append(dev_entity)

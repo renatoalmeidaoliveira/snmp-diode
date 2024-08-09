@@ -1,7 +1,9 @@
 import argparse
-from snmp_diode import discover
 import netaddr
+import os
 from netboxlabs.diode.sdk import DiodeClient
+from snmp_diode import discover
+
 
 parser = argparse.ArgumentParser(description="SNMP Discovery Tool for NetBoxLabs Diode")
 
@@ -21,6 +23,7 @@ parser.add_argument("-l", "--level", type=str, help="SNMPv3 Security Level", req
 parser.add_argument("-d", "--diode", type=str, help="Diode Server", required=False)
 parser.add_argument("-k", "--api_key", type=str, help="Diode API Key", required=False)
 parser.add_argument( "--apply", action="store_true", default=False, help="Apply the changes to NetBox", required=False,)
+parser.add_argument("-r", "--role" , type=str, help="Role of the device", required=False)
  
 
 def main():
@@ -92,16 +95,23 @@ def main():
                 "level": "noAuthNoPriv",  # "authNoPriv", "authPriv", "noAuthNoPriv
                 "username": args.username
                 }
-
-    if args.apply and (args.diode is None):
-        print("Please provide a Diode server and API key")
-        exit(1)
+    
+    api_key = args.api_key
+    if args.apply:
+        if args.diode is None:
+            print("Please provide a Diode server, with the --diode or -d flag")
+            exit(1)
+        if args.api_key is None:
+            api_key = os.getenv("DIODE_API_KEY")
+        if api_key is None:
+            print("Please provide a Diode API key, with the --api_key or -k flag, or set the DIODE_API_KEY environment variable")
+            exit(1)
 
     entities = []
     discover_errors = {}
     if args.host:
         try:
-            device_data = discover.gater_device_data(args.host, snmp_data)
+            device_data = discover.gater_device_data(args.host, args.role, snmp_data)
             entities = entities + device_data.model_dump()
         except Exception as e:
             discover_errors[args.host] = str(e)
@@ -127,7 +137,7 @@ def main():
             target=args.diode,
             app_name="snmp-diode",
             app_version="0.0.1",
-            api_key=args.api_key,
+            api_key=api_key,
         ) as client:
             response = client.ingest(entities=entities)
             if response.errors:
