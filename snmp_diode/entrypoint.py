@@ -3,7 +3,7 @@ import netaddr
 import os
 from netboxlabs.diode.sdk import DiodeClient
 from snmp_diode import discover
-
+from snmp_diode.models import Device
 
 parser = argparse.ArgumentParser(description="SNMP Discovery Tool for NetBoxLabs Diode")
 
@@ -112,7 +112,7 @@ def main():
     discover_errors = {}
     if args.host:
         try:
-            device_data = discover.gater_device_data(args.host, snmp_data, args.role, args.site)
+            device_data: Device = discover.get_device_data(args.host, snmp_data, args.role, args.site)
             entities = entities + device_data.model_dump()
         except Exception as e:
             discover_errors[args.host] = str(e)
@@ -121,7 +121,7 @@ def main():
         network = netaddr.IPNetwork(args.network)
         for address in network:
             try:
-                device_data = discover.gater_device_data(str(address), snmp_data, args.role, args.site)
+                device_data: Device = discover.get_device_data(str(address), snmp_data, args.role, args.site)
                 entities = entities + device_data.model_dump()
             except Exception as e:
                 discover_errors[address] = str(e)
