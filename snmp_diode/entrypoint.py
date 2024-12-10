@@ -1,3 +1,4 @@
+import traceback
 import argparse
 import netaddr
 import os
@@ -29,7 +30,7 @@ parser.add_argument("-s", "--site", type=str, help="Site of the device", require
 
 def main():
     args = parser.parse_args()
-    versions = ["2", "v2c", "3"]
+    versions = ["2", "2c", "3"]
     if args.host is None and args.network is None:
         print("Please provide either a target IP address or a target network address")
         exit(1)
@@ -39,9 +40,9 @@ def main():
         )
         exit(1)
     if args.version not in versions:
-        print("Please provide a valid SNMP version, options are: 2, v2c, 3")
+        print("Please provide a valid SNMP version, options are: 2, 2c, 3")
         exit(1)
-    elif args.version == "2" or args.version == "v2c":
+    elif args.version == "2" or args.version == "2c":
         version = 2
         if args.community is None:
             print("Please provide an SNMP community string")
@@ -115,7 +116,8 @@ def main():
             device_data = discover.gater_device_data(args.host, snmp_data, args.role, args.site)
             entities = entities + device_data.model_dump()
         except Exception as e:
-            discover_errors[args.host] = str(e)
+            error_message = f"{str(e)}\n{traceback.format_exc()}"
+            discover_errors[args.host] = error_message
 
     if args.network:
         network = netaddr.IPNetwork(args.network)
@@ -124,7 +126,8 @@ def main():
                 device_data = discover.gater_device_data(str(address), snmp_data, args.role, args.site)
                 entities = entities + device_data.model_dump()
             except Exception as e:
-                discover_errors[address] = str(e)
+                error_message = f"{str(e)}\n{traceback.format_exc()}"
+                discover_errors[address] = error_message
 
     if discover_errors:
         print("ERROR: The following errors were encountered during discovery:")
