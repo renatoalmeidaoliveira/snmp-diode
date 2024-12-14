@@ -9,6 +9,8 @@ def gater_device_data(address, snmp_data, role=None, site=None):
         "hostname": address,
         "use_sprint_value": True,
         "version": snmp_data["version"],
+        "use_long_names": True,
+        "use_numeric": True,
     }
     if snmp_data["version"] == 2:
         session_data["community"] = snmp_data["version_data"]["community"]
@@ -27,9 +29,9 @@ def gater_device_data(address, snmp_data, role=None, site=None):
     
     session = Session(**session_data)    
 
-    device_name_oid = session.get("iso.3.6.1.2.1.1.5.0")
-    sysid_oid = session.get("iso.3.6.1.2.1.1.2.0")
-    location_oid = session.get("1.3.6.1.2.1.1.6.0")
+    device_name_oid = session.get(".1.3.6.1.2.1.1.5.0")
+    sysid_oid = session.get(".1.3.6.1.2.1.1.2.0")
+    location_oid = session.get(".1.3.6.1.2.1.1.6.0")
 
     device_data = {"hostname": device_name_oid.value}
     manufacturer, device_type = get_device_model(sysid_oid.value)
@@ -53,19 +55,19 @@ def gater_device_data(address, snmp_data, role=None, site=None):
 
 
 def process_interfaces(session):
-    if_name = session.walk("iso.3.6.1.2.1.2.2.1.2")
+    if_name = session.walk(".1.3.6.1.2.1.2.2.1.2")
 
     interfaces = {}
     for item in if_name:
         iface_name = item.value
-        interface_id = item.oid.split(".")[-1]
+        interface_id = item.oid_index
         interfaces[interface_id] = {"index": interface_id, "name": iface_name}
 
     if_mac = session.walk("1.3.6.1.2.1.2.2.1.6")
 
     for item in if_mac:
         iface_name = item.value
-        interface_id = item.oid.split(".")[-1]
+        interface_id = item.oid_index
         interfaces[interface_id]["mac"] = item.value.replace('"', "")[:-1].replace(
             " ", ":"
         )
@@ -75,29 +77,31 @@ def process_interfaces(session):
 
     for item in if_admin:
         iface_name = item.value
-        interface_id = item.oid.split(".")[-1]
+        interface_id = item.oid_index
         enabled = False
         if item.value == "1":
             enabled = True
         interfaces[interface_id]["enabled"] = enabled
 
-    address_items = session.walk("iso.3.6.1.2.1.4.20.1.1")
+    address_items = session.walk(".1.3.6.1.2.1.4.20.1.1")
 
     addresses = {}
     for item in address_items:
         addresses[item.value] = {"address": item.value}
 
-    address_if_items = session.walk("iso.3.6.1.2.1.4.20.1.2")
+    address_if_items = session.walk(".1.3.6.1.2.1.4.20.1.2")
 
     for item in address_if_items:
-        address = item.oid.replace("iso.3.6.1.2.1.4.20.1.2.", "")
+        full_oid = f"{item.oid}.{item.oid_index}"
+        address = full_oid.replace(".1.3.6.1.2.1.4.20.1.2.", "")
         if address in addresses:
             addresses[address]["if_oid"] = item.value
 
-    address_mask_items = session.walk("iso.3.6.1.2.1.4.20.1.3")
+    address_mask_items = session.walk(".1.3.6.1.2.1.4.20.1.3")
 
     for item in address_mask_items:
-        address = item.oid.replace("iso.3.6.1.2.1.4.20.1.3.", "")
+        full_oid = f"{item.oid}.{item.oid_index}"
+        address = full_oid.replace(".1.3.6.1.2.1.4.20.1.3.", "")
         if address in addresses:
             addresses[address]["netmask"] = item.value
 
@@ -108,11 +112,11 @@ def process_interfaces(session):
                 )
             interfaces[addresses[address]["if_oid"]]["address"] = f"{ipnet.ip}/{ipnet.prefixlen}"
 
-    description_items = session.walk("iso.3.6.1.2.1.31.1.1.1.18")
+    description_items = session.walk(".1.3.6.1.2.1.31.1.1.1.18")
     
 
     for item in description_items:
-        interface_id = item.oid.replace("iso.3.6.1.2.1.31.1.1.1.18.", "")
+        interface_id = item.oid_index
         if interface_id in interfaces:
             interfaces[interface_id]["description"] = item.value.replace('"', "")
 
