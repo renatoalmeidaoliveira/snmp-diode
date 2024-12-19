@@ -140,9 +140,12 @@ def process_interfaces(session):
 
 
 def get_device_model(sysoid):
+    print(sysoid)
     manufacturer = "unknow"
     device_type = "unknow"
     sysoid_list = sysoid.split(".")
+    if sysoid_list[0] == "":
+        sysoid_list = sysoid_list[1:]
     if len(sysoid_list) > 6:
         man_id = int(sysoid_list[6])
         if man_id in manufacturers:
